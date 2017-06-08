@@ -1,5 +1,7 @@
-/* defines a class for advancing a 1 meV
-antiparticle in a uniform 1 T magnetic field */
+// Cpush+ version 0.10
+// defines a class for particle tracks
+// in a uniform magnetic field, with
+// a simple leapfrog pushing method.
 
 #include <iostream>
 #include <string>
