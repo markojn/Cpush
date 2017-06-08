@@ -4,6 +4,9 @@
 // a simple leapfrog pushing method.
 
 #include <iostream>
+#include <fstream>
+#include <time.h>
+
 #include <string>
 #include <cmath>
 #include <Eigen/Dense>
@@ -54,19 +57,23 @@ public:
     eigmat hatmap = -(1./2.) * interpolate(x_, step);
     v_  = (I + hatmap).inverse() * (I - hatmap) * v_;
 
-    // particle pushing loop
-    for (int n = 0; n <= nsteps; n++){
-      // text output
-      cout << n << ' ' << x_[0] << ' ' << x_[1] << ' ' << x_[2] << endl;
+    // open a stream to write to file
+    fstream track_io ("my_track.bin", ios::out | ios::binary);
+    if (track_io.is_open()){
 
-      // update the velocity
-      hatmap = interpolate(x_, step);
-      v_  = (I + hatmap).inverse() * (I - hatmap) * v_;
+      // particle pushing loop
+      for (int n = 0; n <= nsteps; n++){
 
-      // update the position
-      x_ += v_ * step;
+        // write the position & velocity to file
+        track_io << n << ' ' << ' ' << x_[0] << ' ' << x_[1] << ' ' << x_[2];
+        track_io      << ' ' << ' ' << v_[0] << ' ' << v_[1] << ' ' << v_[2] << endl;
+
+        // update the velocity and position
+        hatmap = interpolate(x_, step);
+        v_  = (I + hatmap).inverse() * (I - hatmap) * v_;
+        x_ += v_ * step;
+      }
     }
-
     return 0;
   }
 };
